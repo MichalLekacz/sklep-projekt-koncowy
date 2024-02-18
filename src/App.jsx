@@ -13,7 +13,7 @@ function App() {
       try {
         // Pobierz dane z dummyjson za pomocą Axios
         const res = await axios.get(
-          "https://dummyjson.com/products?limit=9&select=category,thumbnail,price,title"
+          "https://dummyjson.com/products?limit=9&select=category,thumbnail,price,title,stock"
         );
         setProducts(res.data);
         setLoading(false);
