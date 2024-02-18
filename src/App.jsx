@@ -5,28 +5,44 @@ import axios from "axios";
 
 function App() {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await axios.get("https://fakestoreapi.com/products");
-      console.log(res.data);
-
-      const productData = res.data;
-
-      setProducts(productData);
+      try {
+        // Pobierz dane z dummyjson za pomocą Axios
+        const res = await axios.get(
+          "https://dummyjson.com/products?limit=9&select=category,thumbnail,price,title"
+        );
+        setProducts(res.data);
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
     };
+
     fetchData();
   }, []);
 
+  if (loading) {
+    return <span className="list__loader"></span>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  const productsToRender = products.products.map((product, index) => (
+    <li key={index} className="list__item">
+      <Product product={product} />
+    </li>
+  ));
+
   return (
     <>
-      <ul className="list__wrapper">
-        {products.map((product) => (
-          <li key={product.id} className="list__item">
-            <Product product={product} />
-          </li>
-        ))}
-      </ul>
+      <ul className="list__wrapper">{productsToRender}</ul>
     </>
   );
 }
